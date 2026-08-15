@@ -1,0 +1,20 @@
+id: 10104
+name: AI Gateways
+items:
+  - BerriAI/litellm
+  - Portkey-AI/gateway
+  - Helicone/ai-gateway
+  - IBM/mcp-context-forge
+  - maximhq/bifrost
+  - looplj/axonhub
+  - diegosouzapw/OmniRoute
+  - songquanpeng/one-api
+  - tensorzero/tensorzero
+  - coaidev/coai
+  - labring/aiproxy
+  - lightseekorg/smg
+  - mylxsw/llm-gateway
+  - traceloop/hub
+  - alibaba/higress
+  - apache/apisix
+  - Kong/kong

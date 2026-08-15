@@ -1,0 +1,181 @@
+import { listCollections, getCollectionRanking } from '@/lib/server/internal-api';
+import { toCollectionSlug } from '@/lib/collections';
+
+export const dynamic = 'force-dynamic';
+
+const SITE_URL = process.env.SITE_URL || 'https://reposcope.io';
+
+const AI_COLLECTION_KEYWORDS = [
+  'ai agent', 'llm', 'mcp', 'coding agent', 'rag', 'ai coding',
+  'machine learning', 'text to sql', 'ai image', 'chatbot',
+  'vector database', 'deep learning', 'natural language processing',
+];
+
+export async function GET() {
+  const sections: string[] = [];
+
+  sections.push(`# Reposcope — Full Documentation
+
+> Reposcope is a free, open analytics platform that tracks over 10 billion GitHub events in real time, providing deep insights into repositories, developers, organizations, and open-source trends.
+
+Source: GitHub Archive (gharchive.org), updated every hour.
+Powered by TiDB.
+
+---
+
+## Home (${SITE_URL}/)
+
+The homepage shows:
+- A real-time counter of total GitHub events analyzed (over 10 billion)
+- Trending repositories ranked by stars, pull requests, or issues in configurable time windows
+- Hot collections (curated technology categories)
+- A search box to jump into any repository or developer analysis
+
+---
+
+## Data Explorer (${SITE_URL}/explore/)
+
+A natural-language query interface for GitHub event data. Users type a question in plain English (e.g., "Which repos gained the most stars last month?") and Reposcope generates SQL, runs it against the full GitHub event dataset, and returns interactive visualizations. Powered by AI (Text-to-SQL).
+
+---
+
+## Repository Analysis (${SITE_URL}/analyze/{owner}/{repo})
+
+Enter any public GitHub repository to see:
+- Stars, forks, commits, issues, pull requests over time
+- Contributor geography and organization distribution
+- Commit time distribution heatmaps
+- Lines of code changed per month
+- Issue and PR response time percentiles
+- Comparison mode: add \`?vs=owner/repo\` to compare two repositories side by side
+
+---
+
+## Organization Analysis (${SITE_URL}/analyze/{org})
+
+Enter any GitHub organization to see:
+- Total repositories, stars, forks, contributors
+- Activity trends across all repositories
+- Top contributors and active repositories
+- Comparison with other organizations
+
+---
+
+## Collections (${SITE_URL}/collections/)
+
+Curated lists of GitHub repositories grouped by technology domain. Each collection provides:
+- A ranking table (sortable by stars, pull requests, issues, PR creators)
+- A trends page showing popularity growth over time
+`);
+
+  // Dynamic collections list
+  let collections: Array<{ id: number; name: string }> = [];
+  try {
+    collections = await listCollections() as any;
+    const collectionLines = collections.map(
+      (c: { name: string }) => `- [${c.name}](${SITE_URL}/collections/${toCollectionSlug(c.name)})`,
+    );
+    sections.push(`### Available Collections (${collections.length} total)\n\n${collectionLines.join('\n')}`);
+  } catch (error) {
+    console.warn('[llms-full.txt] Failed to fetch collections:', error);
+  }
+
+  // Data summary: top 5 repos per major AI collection
+  if (collections.length > 0) {
+    const aiCollections = collections.filter((c) =>
+      AI_COLLECTION_KEYWORDS.some((kw) => c.name.toLowerCase().includes(kw)),
+    );
+
+    if (aiCollections.length > 0) {
+      const summaryLines: string[] = [];
+      summaryLines.push(`---\n\n## AI/ML Data Summary\n\nTop repositories in key AI collections (ranked by stars, last 28 days):\n`);
+
+      for (const col of aiCollections.slice(0, 15)) {
+        try {
+          const ranking = await getCollectionRanking(col.id, 'stars', 'last-28-days');
+          if (ranking?.data && Array.isArray(ranking.data)) {
+            const top5 = (ranking.data as Array<{ repo_name?: string; total?: number }>).slice(0, 5);
+            if (top5.length > 0) {
+              summaryLines.push(`### ${col.name}`);
+              summaryLines.push(`URL: ${SITE_URL}/collections/${toCollectionSlug(col.name)}`);
+              summaryLines.push(`API: ${SITE_URL}/collections/api/${col.id}/ranking?metric=stars&range=last-28-days\n`);
+              for (const repo of top5) {
+                const stars = typeof repo.total === 'number' ? ` (${repo.total.toLocaleString()} stars)` : '';
+                summaryLines.push(`- [${repo.repo_name}](https://github.com/${repo.repo_name})${stars}`);
+              }
+              summaryLines.push('');
+            }
+          }
+        } catch {
+          // skip collections that fail to fetch
+        }
+      }
+
+      if (summaryLines.length > 1) {
+        sections.push(summaryLines.join('\n'));
+      }
+    }
+  }
+
+  // API endpoint examples
+  sections.push(`---
+
+## API Endpoints
+
+Example API calls for programmatic access:
+
+- **List all collections**: \`GET ${SITE_URL}/collections/api\`
+- **Collection ranking by stars**: \`GET ${SITE_URL}/collections/api/{collectionId}/ranking?metric=stars&range=last-28-days\`
+- **Collection ranking by PRs**: \`GET ${SITE_URL}/collections/api/{collectionId}/ranking?metric=pull-requests&range=last-28-days\`
+- **Collection ranking by issues**: \`GET ${SITE_URL}/collections/api/{collectionId}/ranking?metric=issues&range=last-28-days\`
+
+Metrics: \`stars\`, \`pull-requests\`, \`issues\`
+Ranges: \`last-28-days\`, \`month\``);
+
+  sections.push(`---
+
+## Blog (${SITE_URL}/blog)
+
+Technical articles about open-source trends, GitHub data analysis, and Reposcope product updates.
+
+---
+
+## API Documentation (${SITE_URL}/docs/api)
+
+Reposcope provides a free public REST API. Endpoints include:
+- List collections and collection repositories
+- Repository ranking by stars, pull requests, issues
+- Stargazer/contributor/issue-creator history and geography
+- Trending repositories
+
+See the full API reference at ${SITE_URL}/docs/api
+
+---
+
+## Frequently Asked Questions
+
+**Q: What data does Reposcope analyze?**
+A: Reposcope analyzes public GitHub event data archived by GH Archive (gharchive.org). This includes stars, forks, issues, pull requests, commits, comments, and more — over 10 billion events total.
+
+**Q: How often is the data updated?**
+A: Data is updated in near real-time, typically within a few seconds of the event occurring on GitHub.
+
+**Q: Can I analyze any GitHub repository?**
+A: Yes. Enter any public GitHub repository name (e.g., \`facebook/react\`) in the search box and Reposcope will generate a full analytics dashboard.
+
+**Q: Is Reposcope free?**
+A: Yes, Reposcope is completely free and open source.
+
+**Q: Does Reposcope have an API?**
+A: Yes. See the API documentation at ${SITE_URL}/docs/api for available endpoints.
+
+**Q: How can I compare two repositories?**
+A: Go to any repository analysis page and click "VS" or add \`?vs=owner/repo\` to the URL.
+`);
+
+  return new Response(sections.join('\n\n'), {
+    headers: {
+      'Content-Type': 'text/plain; charset=utf-8',
+    },
+  });
+}

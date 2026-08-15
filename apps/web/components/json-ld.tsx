@@ -1,0 +1,475 @@
+export function JsonLd({ data }: { data: Record<string, unknown> }) {
+  return (
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(data) }}
+    />
+  );
+}
+
+const SITE_URL = process.env.SITE_URL || 'https://reposcope.io';
+
+export function WebSiteJsonLd() {
+  return (
+    <JsonLd
+      data={{
+        '@context': 'https://schema.org',
+        '@type': 'WebSite',
+        name: 'Reposcope',
+        url: SITE_URL,
+        description: 'Reposcope analyzes billions of GitHub events and provides insights for open source software.',
+        keywords: [
+          'open source analytics',
+          'GitHub insights',
+          'GitHub trending repositories',
+          'AI agent frameworks',
+          'open source intelligence',
+          'repository analytics',
+          'developer analytics',
+        ],
+        publisher: {
+          '@type': 'Organization',
+          name: 'Reposcope',
+          url: 'https://reposcope.io',
+        },
+        potentialAction: {
+          '@type': 'SearchAction',
+          target: `${SITE_URL}/explore/?q={search_term_string}`,
+          'query-input': 'required name=search_term_string',
+        },
+      }}
+    />
+  );
+}
+
+export function CollectionPageJsonLd({
+  name,
+  description,
+  slug,
+}: {
+  name: string;
+  description: string;
+  slug: string;
+}) {
+  return (
+    <JsonLd
+      data={{
+        '@context': 'https://schema.org',
+        '@type': 'CollectionPage',
+        name,
+        description,
+        url: `${SITE_URL}/collections/${slug}`,
+        isPartOf: { '@type': 'WebSite', name: 'Reposcope', url: SITE_URL },
+      }}
+    />
+  );
+}
+
+export function FAQPageJsonLd({ items }: { items: { question: string; answer: string }[] }) {
+  return (
+    <JsonLd
+      data={{
+        '@context': 'https://schema.org',
+        '@type': 'FAQPage',
+        mainEntity: items.map((item) => ({
+          '@type': 'Question',
+          name: item.question,
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: item.answer,
+          },
+        })),
+      }}
+    />
+  );
+}
+
+export function OrganizationJsonLd() {
+  return (
+    <JsonLd
+      data={{
+        '@context': 'https://schema.org',
+        '@type': 'Organization',
+        name: 'Reposcope',
+        url: SITE_URL,
+        logo: `${SITE_URL}/logo.svg`,
+        description: 'Reposcope analyzes billions of GitHub events and provides insights for open source software, AI agent ecosystems, and trending repositories.',
+        keywords: [
+          'open source',
+          'GitHub analytics',
+          'AI agent ecosystem',
+          'open source intelligence',
+        ],
+        parentOrganization: {
+          '@type': 'Organization',
+          name: 'Reposcope',
+          url: 'https://reposcope.io',
+        },
+        sameAs: [
+          'https://github.com/reposcope/reposcope',
+          'https://twitter.com/Reposcope',
+        ],
+      }}
+    />
+  );
+}
+
+export function BreadcrumbListJsonLd({
+  items,
+}: {
+  items: { name: string; url?: string }[];
+}) {
+  return (
+    <JsonLd
+      data={{
+        '@context': 'https://schema.org',
+        '@type': 'BreadcrumbList',
+        itemListElement: items.map((item, index) => ({
+          '@type': 'ListItem',
+          position: index + 1,
+          name: item.name,
+          ...(item.url ? { item: item.url.startsWith('http') ? item.url : `${SITE_URL}${item.url}` } : {}),
+        })),
+      }}
+    />
+  );
+}
+
+export function SoftwareApplicationJsonLd({
+  repoName,
+  description,
+  stars,
+  language,
+  license,
+  author,
+}: {
+  repoName: string;
+  description?: string;
+  stars?: number;
+  language?: string;
+  license?: string;
+  author?: { type: 'Person' | 'Organization'; name: string; url?: string };
+}) {
+  return (
+    <JsonLd
+      data={{
+        '@context': 'https://schema.org',
+        '@type': 'SoftwareSourceCode',
+        name: repoName,
+        description,
+        codeRepository: `https://github.com/${repoName}`,
+        programmingLanguage: language,
+        ...(license ? { license } : {}),
+        ...(author
+          ? {
+              author: {
+                '@type': author.type,
+                name: author.name,
+                ...(author.url ? { url: author.url } : {}),
+              },
+            }
+          : {}),
+        ...(stars != null
+          ? {
+              aggregateRating: {
+                '@type': 'AggregateRating',
+                ratingValue: Math.min(5, Math.round((stars / 10000) * 5 * 10) / 10),
+                bestRating: 5,
+                ratingCount: stars,
+              },
+            }
+          : {}),
+      }}
+    />
+  );
+}
+
+export function PersonJsonLd({
+  name,
+  login,
+  bio,
+  avatarUrl,
+}: {
+  name: string;
+  login: string;
+  bio?: string;
+  avatarUrl?: string;
+}) {
+  return (
+    <JsonLd
+      data={{
+        '@context': 'https://schema.org',
+        '@type': 'Person',
+        name,
+        url: `https://github.com/${login}`,
+        ...(bio ? { description: bio } : {}),
+        ...(avatarUrl ? { image: avatarUrl } : {}),
+        sameAs: [`https://github.com/${login}`],
+      }}
+    />
+  );
+}
+
+export function SiteNavigationJsonLd() {
+  const SITE_URL_LOCAL = process.env.SITE_URL || 'https://reposcope.io';
+  const navItems = [
+    { name: 'Home', url: `${SITE_URL_LOCAL}/` },
+    { name: 'Data Explorer', url: `${SITE_URL_LOCAL}/explore` },
+    { name: 'Collections', url: `${SITE_URL_LOCAL}/collections` },
+    { name: 'Trending', url: `${SITE_URL_LOCAL}/trending` },
+    { name: 'Languages', url: `${SITE_URL_LOCAL}/languages` },
+    { name: 'Blog', url: `${SITE_URL_LOCAL}/blog` },
+  ];
+  return (
+    <JsonLd
+      data={{
+        '@context': 'https://schema.org',
+        '@type': 'ItemList',
+        name: 'Site Navigation',
+        itemListElement: navItems.map((item, index) => ({
+          '@type': 'SiteNavigationElement',
+          position: index + 1,
+          name: item.name,
+          url: item.url,
+        })),
+      }}
+    />
+  );
+}
+
+export function ItemListJsonLd({
+  name,
+  items,
+}: {
+  name: string;
+  items: { name: string; url: string }[];
+}) {
+  return (
+    <JsonLd
+      data={{
+        '@context': 'https://schema.org',
+        '@type': 'ItemList',
+        name,
+        numberOfItems: items.length,
+        itemListElement: items.map((item, index) => ({
+          '@type': 'ListItem',
+          position: index + 1,
+          name: item.name,
+          url: item.url,
+        })),
+      }}
+    />
+  );
+}
+
+export function AggregateRatingJsonLd({
+  itemName,
+  itemUrl,
+  ratingValue,
+  ratingCount,
+}: {
+  itemName: string;
+  itemUrl: string;
+  ratingValue: number;
+  ratingCount: number;
+}) {
+  return (
+    <JsonLd
+      data={{
+        '@context': 'https://schema.org',
+        '@type': 'Product',
+        name: itemName,
+        url: itemUrl.startsWith('http') ? itemUrl : `${SITE_URL}${itemUrl}`,
+        aggregateRating: {
+          '@type': 'AggregateRating',
+          ratingValue: Math.max(1, Math.min(5, ratingValue)),
+          bestRating: 5,
+          worstRating: 1,
+          ratingCount,
+        },
+      }}
+    />
+  );
+}
+
+export function SiteApplicationJsonLd() {
+  return (
+    <JsonLd
+      data={{
+        '@context': 'https://schema.org',
+        '@type': 'SoftwareApplication',
+        name: 'Reposcope',
+        applicationCategory: 'DeveloperApplication',
+        operatingSystem: 'Web',
+        url: SITE_URL,
+        description:
+          'Reposcope analyzes billions of GitHub events and provides real-time insights for open source software repositories, developers, and organizations.',
+        offers: {
+          '@type': 'Offer',
+          price: '0',
+          priceCurrency: 'USD',
+        },
+        author: {
+          '@type': 'Organization',
+          name: 'PingCAP',
+          url: 'https://pingcap.com',
+        },
+        screenshot: `${SITE_URL}/seo-widgets-homepage.jpeg`,
+      }}
+    />
+  );
+}
+
+export function WebPageJsonLd() {
+  return (
+    <JsonLd
+      data={{
+        '@context': 'https://schema.org',
+        '@type': 'WebPage',
+        name: 'Reposcope — Open Source Software Insight',
+        url: SITE_URL,
+        description:
+          'Real-time analytics for 10B+ GitHub events. Discover trending repositories, analyze open source projects, and explore the AI agent ecosystem with data-driven insights.',
+        keywords: [
+          'open source analytics',
+          'GitHub insights',
+          'AI agent frameworks',
+          'trending repositories',
+          'GitHub star history',
+          'open source intelligence',
+          'repository comparison',
+          'developer analytics',
+          'AI coding tools',
+          'MCP servers',
+          'LLM frameworks',
+          'open source AI projects',
+        ],
+        isPartOf: {
+          '@type': 'WebSite',
+          name: 'Reposcope',
+          url: SITE_URL,
+        },
+        about: [
+          {
+            '@type': 'Thing',
+            name: 'Open Source Software',
+            description: 'Analysis and insights for open source repositories and communities on GitHub.',
+          },
+          {
+            '@type': 'Thing',
+            name: 'AI Agent Ecosystem',
+            description: 'Tracking trending AI agent frameworks, LLM tools, MCP servers, and AI coding assistants in open source.',
+          },
+          {
+            '@type': 'Thing',
+            name: 'GitHub Analytics',
+            description: 'Real-time analytics on stars, forks, pull requests, issues, and contributor activity across GitHub.',
+          },
+        ],
+        mainEntity: {
+          '@type': 'SoftwareApplication',
+          name: 'Reposcope',
+          applicationCategory: 'DeveloperApplication',
+          operatingSystem: 'Web',
+          url: SITE_URL,
+        },
+        provider: {
+          '@type': 'Organization',
+          name: 'PingCAP',
+          url: 'https://pingcap.com',
+        },
+      }}
+    />
+  );
+}
+
+export function DatasetJsonLd({
+  name,
+  description,
+  url,
+  distributionUrl,
+}: {
+  name: string;
+  description: string;
+  url: string;
+  distributionUrl?: string;
+}) {
+  return (
+    <JsonLd
+      data={{
+        '@context': 'https://schema.org',
+        '@type': 'Dataset',
+        name,
+        description,
+        url,
+        creator: {
+          '@type': 'Organization',
+          name: 'Reposcope',
+          url: SITE_URL,
+          parentOrganization: {
+            '@type': 'Organization',
+            name: 'PingCAP',
+            url: 'https://pingcap.com',
+          },
+        },
+        license: 'https://creativecommons.org/licenses/by/4.0/',
+        isAccessibleForFree: true,
+        temporalCoverage: '2011/..',
+        variableMeasured: [
+          'GitHub stars',
+          'Pull requests',
+          'Issues',
+          'Commits',
+          'Contributors',
+          'Forks',
+        ],
+        ...(distributionUrl
+          ? {
+              distribution: {
+                '@type': 'DataDownload',
+                contentUrl: distributionUrl.startsWith('http') ? distributionUrl : `${SITE_URL}${distributionUrl}`,
+                encodingFormat: 'text/html',
+              },
+            }
+          : {}),
+      }}
+    />
+  );
+}
+
+export function SoftwareSourceCodeJsonLd({
+  repoName,
+  description,
+  stars,
+  language,
+  url,
+}: {
+  repoName: string;
+  description?: string;
+  stars?: number;
+  language?: string;
+  url?: string;
+}) {
+  return (
+    <JsonLd
+      data={{
+        '@context': 'https://schema.org',
+        '@type': 'SoftwareSourceCode',
+        name: repoName,
+        description,
+        codeRepository: `https://github.com/${repoName}`,
+        ...(language ? { programmingLanguage: language } : {}),
+        ...(url ? { url: url.startsWith('http') ? url : `${SITE_URL}${url}` } : {}),
+        ...(stars != null
+          ? {
+              interactionStatistic: {
+                '@type': 'InteractionCounter',
+                interactionType: 'https://schema.org/LikeAction',
+                userInteractionCount: stars,
+              },
+            }
+          : {}),
+      }}
+    />
+  );
+}

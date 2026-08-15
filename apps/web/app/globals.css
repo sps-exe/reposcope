@@ -1,0 +1,609 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    color-scheme: dark;
+
+    --color-primary: rgb(255, 255, 255);
+    --color-primary-highlighted: rgb(255, 255, 255);
+    --color-primary-reverse: rgb(6, 20, 26);
+    --color-primary-darkened: rgba(255, 255, 255, 0.6);
+    --color-disabled: #5b6270;
+
+    --background-color-body: #0b0e14;
+    --background-color-toolbar: #11141c;
+    --background-color-popover: #141826;
+    --background-color-control: #12151f;
+    --background-color-code: #0a0e1a;
+    --background-color-tooltip: #141826;
+
+    --text-color-title: #e8ebf2;
+    --text-color-subtitle: rgb(198, 204, 216);
+    --text-color-content: rgb(126, 134, 152);
+    --text-color-active: rgb(198, 204, 216);
+    --text-color-tooltip: #c2c8d6;
+
+    --border-color-default: #2c3242;
+    --border-color-dimmed: #20263a;
+
+    --text-color-secondary: #d6dae4;
+    --text-color-muted: #7d8496;
+    --text-color-gray: #8b92a4;
+
+    --border-color-subtle: #232941;
+
+    --bg-card: #151927;
+    --bg-page: #0b0e14;
+
+    --divide-color-default: #2c3242;
+    --divide-color-dimmed: #20263a;
+
+    --list-item-focus: rgb(31, 36, 56);
+    --list-item-active: rgb(38, 44, 68);
+
+    --scrollbar-track-color: #6b7180;
+    --scrollbar-thumb-color: #3c4252;
+    --scrollbar-thumb-hover-color: #4c5368;
+
+    --headless-tab-background: #2a2f40;
+    --headless-tab-active-background: #e8ebf2;
+    --headless-tab-text: #9ba1b0;
+    --headless-tab-active-text: #10141f;
+
+    --selector-border-color: #4c5368;
+    --selector-fill-color: #22d3ee;
+
+    --site-header-height: 60px;
+    --site-left-nav-width: 240px;
+    --site-widget-gap: 16px;
+    --background: 225 25% 8%;
+    --foreground: 220 22% 92%;
+    --card: 226 22% 12%;
+    --card-foreground: 220 22% 92%;
+    --popover: 227 24% 14%;
+    --popover-foreground: 220 22% 92%;
+    --primary: 187 92% 53%;
+    --primary-foreground: 228 60% 7%;
+    --secondary: 226 18% 16%;
+    --secondary-foreground: 220 22% 92%;
+    --muted: 227 20% 15%;
+    --muted-foreground: 224 10% 52%;
+    --accent: 226 18% 17%;
+    --accent-foreground: 220 10% 82%;
+    --destructive: 0 68% 58%;
+    --border: 227 18% 19%;
+    --input: 227 20% 15%;
+    --ring: 187 92% 62%;
+    --chart-1: 187 92% 58%;
+    --chart-2: 258 90% 76%;
+    --chart-3: 160 62% 56%;
+    --chart-4: 32 92% 62%;
+    --chart-5: 340 76% 64%;
+    --radius: 0.75rem;
+    --sidebar: 226 22% 12%;
+    --sidebar-foreground: 220 22% 92%;
+    --sidebar-primary: 187 92% 58%;
+    --sidebar-primary-foreground: 228 60% 7%;
+    --sidebar-accent: 226 18% 16%;
+    --sidebar-accent-foreground: 220 22% 92%;
+    --sidebar-border: 227 18% 19%;
+    --sidebar-ring: 187 92% 62%;
+  }
+
+  html,
+  body {
+    background-color: var(--background-color-body);
+    color: var(--text-color-content);
+  }
+
+  body {
+    @apply min-h-screen antialiased text-foreground;
+  }
+  .theme {
+    --font-sans: var(--font-sans);
+  }
+  * {
+    @apply border-border outline-ring/50;
+  }
+  html {
+    font-family: var(--font-sans), ui-sans-serif, system-ui, -apple-system, sans-serif;
+  }
+}
+
+@layer utilities {
+  .site-link {
+    @apply font-medium text-[#d8d8d8] underline decoration-white/20 underline-offset-4 transition hover:text-white hover:decoration-white/50;
+  }
+
+  .site-link-muted {
+    @apply text-[#d6dae5] underline decoration-white/15 underline-offset-4 transition hover:text-white hover:decoration-white/40;
+  }
+}
+
+@layer components {
+  .TextInput {
+    @apply inline-flex items-center rounded-md bg-control px-3 py-1.5 text-sm text-active transition-colors duration-150;
+  }
+
+  .TextInput input,
+  .TextInput textarea {
+    @apply bg-control text-sm text-active outline-none;
+  }
+
+  .TextInput ::placeholder {
+    @apply text-sm text-disabled;
+  }
+
+  .TextInput.TextInput-lg {
+    @apply px-4 py-2 text-base;
+  }
+
+  .TextInput.TextInput-lg input,
+  .TextInput.TextInput-lg textarea {
+    @apply text-base;
+  }
+
+  .TextInput.TextInput-lg ::placeholder {
+    @apply text-base;
+  }
+
+  .TextInput.TextInput-compact {
+    @apply p-0;
+  }
+
+  .TextInput:not(.TextInput-borderless) {
+    @apply border border-transparent;
+    --tw-shadow-color: var(--color-primary-darkened);
+  }
+
+  .TextInput:not(.TextInput-borderless):focus,
+  .TextInput:not(.TextInput-borderless):focus-within {
+    border-color: #888;
+  }
+
+  .Button {
+    @apply inline-flex items-center justify-center gap-1.5 rounded-md border border-transparent px-3 py-1.5 text-sm transition-colors duration-150;
+  }
+
+  .Button:not(.Button-primary) {
+    --tw-shadow-color: var(--color-disabled);
+  }
+
+  .Button:focus-visible {
+    @apply outline-none;
+    border-color: #888;
+  }
+
+  .Button-primary {
+    @apply border-primary bg-primary text-primary-reverse;
+    --tw-shadow-color: var(--color-primary-darkened);
+  }
+
+  .Button-primary:hover {
+    @apply bg-primary-highlighted;
+  }
+
+  .Button-secondary {
+    @apply bg-popover text-primary;
+    --tw-shadow-color: var(--color-primary-darkened);
+  }
+
+  .Button-secondary:hover {
+    background-color: var(--list-item-focus);
+  }
+
+  .Button:disabled {
+    @apply cursor-not-allowed border-disabled bg-transparent text-disabled;
+  }
+
+  .Button-sm {
+    @apply px-2 py-1 text-xs;
+  }
+
+  .Button-lg {
+    @apply px-4 py-2 text-lg;
+  }
+
+  .SelectWrapper {
+    @apply inline-flex flex-col content-start flex-wrap gap-1;
+  }
+
+  .SelectTitle {
+    @apply text-xs leading-6 text-content;
+  }
+
+  .SelectTrigger {
+    @apply inline-flex w-full items-center justify-between gap-2 rounded-md bg-control px-3 py-1.5 text-sm text-active outline-none transition-colors duration-150;
+  }
+
+  .SelectWrapper:not(.Select-borderless) .SelectTrigger {
+    @apply border border-[#3a3a3a];
+  }
+
+  .SelectWrapper:not(.Select-borderless) .SelectTrigger:hover {
+    background-color: var(--background-color-popover);
+    border-color: #555;
+  }
+
+  .SelectWrapper:not(.Select-borderless) .SelectTrigger:focus,
+  .SelectWrapper:not(.Select-borderless) .SelectTrigger:focus-visible {
+    border-color: #888;
+  }
+
+  .SelectTrigger[data-placeholder] {
+    color: var(--text-color-content);
+  }
+
+  .SelectIcon {
+    color: var(--text-color-title);
+  }
+
+  .SelectContent {
+    @apply overflow-hidden rounded-md bg-popover text-subtitle shadow-lg;
+    box-shadow:
+      0 10px 38px -10px rgba(22, 23, 24, 0.35),
+      0 10px 20px -15px rgba(22, 23, 24, 0.2);
+  }
+
+  .SelectViewport {
+    @apply p-1.5;
+  }
+
+  .SelectItem {
+    @apply relative flex h-8 select-none items-center rounded px-9 pl-7 text-[13px] leading-none text-subtitle outline-none;
+  }
+
+  .SelectItem[data-disabled] {
+    @apply pointer-events-none text-disabled;
+  }
+
+  .SelectItem[data-highlighted] {
+    background-color: var(--list-item-active);
+    color: var(--text-color-active);
+  }
+
+  .SelectLabel {
+    @apply px-6 text-xs leading-6 text-content;
+  }
+
+  .SelectSeparator {
+    @apply mx-1.5 my-1 h-px;
+    background-color: var(--text-color-content);
+  }
+
+  .SelectItemIndicator {
+    @apply absolute left-0 inline-flex w-6 items-center justify-center;
+  }
+
+  .SelectScrollButton {
+    @apply flex h-7 items-center justify-center bg-popover text-title;
+  }
+
+  .RemoteSelectItem-button {
+    @apply flex w-full cursor-pointer items-center gap-2 rounded-md px-3 py-2 text-left text-xs text-content transition-colors duration-150;
+  }
+
+  .RemoteSelectItem-button:hover,
+  .RemoteSelectItem-button:focus {
+    background-color: var(--list-item-focus);
+  }
+
+  .RemoteSelectItem-button[data-selected="true"] {
+    background-color: var(--list-item-active);
+    color: var(--text-color-active);
+  }
+
+  .InputPopper-content {
+    @apply rounded-lg bg-popover p-2 shadow-lg;
+    transform-origin: var(--radix-popover-content-transform-origin);
+    animation: input-popper-show 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .InputPopper-content:not(.InputPopper-unbound) {
+    width: var(--radix-popover-trigger-width);
+  }
+
+  .InputPopper-content[data-state="closed"] {
+    animation-name: input-popper-hide;
+  }
+
+  .SiteHeader {
+    @apply sticky top-0 z-10 flex w-full items-center gap-3 overflow-x-auto bg-toolbar px-5 py-2 shadow;
+    height: var(--site-header-height);
+    color: rgb(245, 246, 247);
+    font-family:
+      system-ui,
+      -apple-system,
+      "Segoe UI",
+      Roboto,
+      Ubuntu,
+      Cantarell,
+      "Noto Sans",
+      sans-serif,
+      BlinkMacSystemFont,
+      Helvetica,
+      Arial,
+      "Apple Color Emoji",
+      "Segoe UI Emoji",
+      "Segoe UI Symbol";
+    font-size: 16px;
+    font-weight: 400;
+    text-decoration-style: solid;
+    text-rendering: optimizeLegibility;
+  }
+
+  .SiteHeader-menu > ul {
+    @apply m-0 flex list-none items-center gap-3 p-2;
+  }
+
+  .SiteHeader-menu-item,
+  .SiteHeader-menu-trigger {
+    @apply flex items-center gap-1 overflow-hidden whitespace-nowrap rounded-md px-3 py-1.5 outline-none transition-colors duration-150;
+  }
+
+  .SiteHeader-menu-item:hover,
+  .SiteHeader-menu-trigger:hover {
+    @apply text-primary;
+  }
+
+  .SiteHeader-menu-item:focus-visible,
+  .SiteHeader-menu-trigger:focus-visible {
+    @apply text-white outline-none;
+  }
+
+  .SiteHeader-menu-trigger-indicator {
+    @apply transition-transform duration-200;
+  }
+
+  .SiteHeader-menu-trigger[data-state="open"] .SiteHeader-menu-trigger-indicator {
+    transform: rotate(180deg);
+  }
+
+  .SiteHeader-menu-content {
+    @apply rounded-lg bg-popover p-2 text-sm text-subtitle shadow-lg;
+    transform-origin: var(--radix-menubar-content-transform-origin);
+    animation: site-header-menu-content-show 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .SiteHeader-menu-content[data-state="closed"] {
+    animation-name: site-header-menu-content-hide;
+  }
+
+  .SiteHeader-menu-content ul {
+    @apply m-0 list-none p-0;
+  }
+
+  .SiteHeader-menu-content li {
+    @apply py-1;
+  }
+
+  .SiteHeader-menu-content li + li {
+    @apply mt-1;
+  }
+
+  .SiteHeader-menu-content-arrow {
+    fill: var(--background-color-popover);
+  }
+
+  .SiteHeader-menu-divider {
+    @apply hidden;
+  }
+
+  .kbd {
+    @apply inline-flex min-h-[2.2em] min-w-[2.2em] items-center justify-center rounded px-1.5 text-xs leading-5 text-[#888];
+    background-color: #252525;
+  }
+
+  .search-dialog {
+    width: min(48rem, calc(100vw - 2rem)) !important;
+    max-width: none !important;
+  }
+
+  .kbd-sm {
+    @apply min-h-[1.6em] min-w-[1.6em] px-1 text-sm leading-5;
+  }
+
+  .skeleton {
+    @apply bg-control;
+    animation: skeleton-pulse 1.6s ease-in-out infinite alternate;
+  }
+
+  .skeleton-paused .skeleton {
+    animation: none;
+    opacity: 0.6;
+  }
+
+  .chart-loader {
+    @apply relative block h-12 w-12 rounded-full;
+    animation: chart-loader-rotate 1s linear infinite;
+  }
+
+  .chart-loader::before,
+  .chart-loader::after {
+    content: "";
+    @apply absolute inset-0 box-border rounded-full;
+    border: 5px solid #fff;
+    animation: chart-loader-clip-fix 2s linear infinite;
+  }
+
+  .chart-loader::after {
+    inset: 8px;
+    border-color: var(--color-primary);
+    transform: rotate3d(90, 90, 0, 180deg);
+  }
+}
+
+@layer utilities {
+  .min-h-page {
+    min-height: calc(100vh - var(--site-header-height));
+  }
+
+  .max-h-page {
+    max-height: calc(100vh - var(--site-header-height));
+  }
+
+  .h-page {
+    height: calc(100vh - var(--site-header-height));
+  }
+
+  .top-header {
+    top: var(--site-header-height);
+  }
+
+  .styled-scrollbar {
+    scrollbar-width: thin;
+  }
+
+  .styled-scrollbar::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  .styled-scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+    border-radius: 5px;
+  }
+
+  .styled-scrollbar::-webkit-scrollbar-thumb {
+    background: transparent;
+    border-radius: 5px;
+  }
+
+  .styled-scrollbar:hover::-webkit-scrollbar-thumb {
+    background: var(--scrollbar-thumb-color);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+  }
+
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes scaleOut {
+  from {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  to {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+}
+
+@keyframes input-popper-show {
+  from {
+    opacity: 0;
+    transform: scale(0.5);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes input-popper-hide {
+  from {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  to {
+    opacity: 0;
+    transform: scale(0.5);
+  }
+}
+
+@keyframes site-header-menu-content-show {
+  from {
+    opacity: 0;
+    transform: scale(0.5);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes site-header-menu-content-hide {
+  from {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  to {
+    opacity: 0;
+    transform: scale(0.5);
+  }
+}
+
+@keyframes skeleton-pulse {
+  from {
+    opacity: 0.3;
+  }
+
+  to {
+    opacity: 0.6;
+  }
+}
+
+@keyframes chart-loader-rotate {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes shimmer {
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+@keyframes chart-loader-clip-fix {
+  0% {
+    clip-path: polygon(50% 50%, 0 0, 0 0, 0 0, 0 0, 0 0);
+  }
+
+  50% {
+    clip-path: polygon(50% 50%, 0 0, 100% 0, 100% 0, 100% 0, 100% 0);
+  }
+
+  75%,
+  100% {
+    clip-path: polygon(50% 50%, 0 0, 100% 0, 100% 100%, 100% 100%, 100% 100%);
+  }
+}

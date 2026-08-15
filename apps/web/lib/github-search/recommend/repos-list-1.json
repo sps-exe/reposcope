@@ -1,0 +1,9 @@
+[
+  {"id": 41986369, "fullName": "pingcap/tidb"},
+  {"id": 552661142, "fullName": "langchain-ai/langchain"},
+  {"id": 661366490, "fullName": "ollama/ollama"},
+  {"id": 694934975, "fullName": "langgenius/dify"},
+  {"id": 726325074, "fullName": "open-webui/open-webui"},
+  {"id": 624874037, "fullName": "ggml-org/llama.cpp"},
+  {"id": 779495842, "fullName": "anthropics/claude-code"}
+]

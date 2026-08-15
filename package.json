@@ -1,0 +1,30 @@
+{
+  "name": "reposcope-monorepo",
+  "private": true,
+  "scripts": {
+    "build": "turbo run build",
+    "dev": "pnpm --filter web dev",
+    "dev:web": "pnpm --filter web dev",
+    "dev:all": "turbo run dev --filter=web --filter=docs",
+    "dev:docs": "turbo run dev --filter=docs",
+    "start": "pnpm --filter web start",
+    "start:web": "pnpm --filter web start",
+    "start:all": "turbo run start --filter=web --filter=docs",
+    "start:docs": "turbo run start --filter=docs",
+    "lint": "turbo run lint",
+    "check-types": "turbo run check-types"
+  },
+  "devDependencies": {
+    "turbo": "^2.7.1",
+    "typescript": "^5.2.2"
+  },
+  "packageManager": "pnpm@10.29.3",
+  "engines": {
+    "node": ">=20.9.0"
+  },
+  "pnpm": {
+    "overrides": {
+      "@tanstack/react-query": "^5.90.21"
+    }
+  }
+}

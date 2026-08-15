@@ -1,0 +1,222 @@
+export function JsonLd({ data }: { data: Record<string, unknown> }) {
+  return (
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(data) }}
+    />
+  );
+}
+
+const SITE_URL = process.env.SITE_URL || 'https://reposcope.io';
+
+export function BlogPostJsonLd({
+  title,
+  description,
+  slug,
+  date,
+  authors,
+  image,
+  keywords,
+}: {
+  title: string;
+  description: string;
+  slug: string;
+  date: string;
+  authors?: string[];
+  image?: string;
+  keywords?: string[];
+}) {
+  return (
+    <JsonLd
+      data={{
+        '@context': 'https://schema.org',
+        '@type': ['BlogPosting', 'TechArticle'],
+        headline: title,
+        description,
+        url: `${SITE_URL}/blog/${slug}`,
+        datePublished: date,
+        dateModified: date,
+        ...(image ? { image } : {}),
+        ...(keywords?.length ? { keywords: keywords.join(', ') } : {}),
+        ...(authors?.length
+          ? { author: authors.map((name) => ({ '@type': 'Person', name })) }
+          : {}),
+        publisher: {
+          '@type': 'Organization',
+          name: 'Reposcope',
+          url: SITE_URL,
+          logo: {
+            '@type': 'ImageObject',
+            url: `${SITE_URL}/logo.png`,
+          },
+        },
+        isPartOf: {
+          '@type': 'Blog',
+          name: 'Reposcope Blog',
+          url: `${SITE_URL}/blog`,
+        },
+        mainEntityOfPage: {
+          '@type': 'WebPage',
+          '@id': `${SITE_URL}/blog/${slug}`,
+        },
+      }}
+    />
+  );
+}
+
+export function LearningResourceJsonLd({
+  title,
+  description,
+  slug,
+  date,
+  keywords,
+  image,
+}: {
+  title: string;
+  description: string;
+  slug: string;
+  date?: string;
+  keywords?: string[];
+  image?: string;
+}) {
+  return (
+    <JsonLd
+      data={{
+        '@context': 'https://schema.org',
+        '@type': 'LearningResource',
+        name: title,
+        description,
+        url: `${SITE_URL}/blog/${slug}`,
+        ...(date ? { datePublished: date } : {}),
+        ...(image ? { image } : {}),
+        ...(keywords?.length ? { keywords: keywords.join(', ') } : {}),
+        educationalUse: 'professional development',
+        learningResourceType: 'article',
+        provider: {
+          '@type': 'Organization',
+          name: 'Reposcope',
+          url: SITE_URL,
+        },
+        isPartOf: {
+          '@type': 'Blog',
+          name: 'Reposcope Blog',
+          url: `${SITE_URL}/blog`,
+        },
+      }}
+    />
+  );
+}
+
+export function ApiDocJsonLd({
+  title,
+  description,
+  slug,
+}: {
+  title: string;
+  description: string;
+  slug: string;
+}) {
+  return (
+    <JsonLd
+      data={{
+        '@context': 'https://schema.org',
+        '@type': 'TechArticle',
+        headline: title,
+        description,
+        url: `${SITE_URL}/docs/api/${slug}`,
+        publisher: {
+          '@type': 'Organization',
+          name: 'Reposcope',
+          url: SITE_URL,
+        },
+      }}
+    />
+  );
+}
+
+export function BreadcrumbListJsonLd({
+  items,
+}: {
+  items: { name: string; url?: string }[];
+}) {
+  return (
+    <JsonLd
+      data={{
+        '@context': 'https://schema.org',
+        '@type': 'BreadcrumbList',
+        itemListElement: items.map((item, index) => ({
+          '@type': 'ListItem',
+          position: index + 1,
+          name: item.name,
+          ...(item.url ? { item: item.url.startsWith('http') ? item.url : `${SITE_URL}${item.url}` } : {}),
+        })),
+      }}
+    />
+  );
+}
+
+export function CollectionPageJsonLd({
+  title,
+  description,
+  url,
+  posts,
+}: {
+  title: string;
+  description: string;
+  url: string;
+  posts: { title: string; description: string; slug: string; date: string | null; image?: string }[];
+}) {
+  return (
+    <JsonLd
+      data={{
+        '@context': 'https://schema.org',
+        '@type': 'CollectionPage',
+        name: title,
+        description,
+        url: url.startsWith('http') ? url : `${SITE_URL}${url}`,
+        isPartOf: {
+          '@type': 'WebSite',
+          name: 'Reposcope',
+          url: SITE_URL,
+        },
+        mainEntity: {
+          '@type': 'ItemList',
+          itemListElement: posts.map((post, index) => ({
+            '@type': 'ListItem',
+            position: index + 1,
+            url: `${SITE_URL}/blog/${post.slug}`,
+            name: post.title,
+          })),
+        },
+      }}
+    />
+  );
+}
+
+export function PersonJsonLd({
+  name,
+  url,
+  image,
+  description,
+  sameAs,
+}: {
+  name: string;
+  url?: string;
+  image?: string;
+  description?: string;
+  sameAs?: string[];
+}) {
+  return (
+    <JsonLd
+      data={{
+        '@context': 'https://schema.org',
+        '@type': 'Person',
+        name,
+        ...(url ? { url } : {}),
+        ...(image ? { image } : {}),
+        ...(description ? { description } : {}),
+        ...(sameAs?.length ? { sameAs } : {}),
+      }}
+    />
+  );
+}

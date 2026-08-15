@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="220" height="48" viewBox="0 0 220 48" fill="none" role="img" aria-label="Reposcope">
+  <defs>
+    <linearGradient id="rs-mark" x1="0" y1="48" x2="36" y2="0" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#22d3ee"/>
+      <stop offset="1" stop-color="#a78bfa"/>
+    </linearGradient>
+  </defs>
+  <rect x="1" y="6" width="36" height="36" rx="9" fill="url(#rs-mark)"/>
+  <path d="M9 26h6l3-8 5 14 3-6h5" stroke="#0b0e14" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/>
+  <text x="49" y="31.5" font-family="'Space Grotesk', 'Segoe UI', system-ui, sans-serif" font-size="25" font-weight="600" letter-spacing="-0.4" fill="#e9eaee">Reposcope</text>
+</svg>

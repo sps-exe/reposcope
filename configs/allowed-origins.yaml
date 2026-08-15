@@ -1,0 +1,18 @@
+private_origins:
+  # Develop.
+  - ^http://localhost:\d+$
+  # Preview.
+  - ^https://pingcap-reposcope-preview-pr-.+\.surge\.sh$
+  - ^https*://.+\.preview\.app\.github\.dev/*$
+  # Production.
+  - ^https://reposcope\.io$
+  - ^https://next\.reposcope\.io$
+  - ^https://live\.reposcope\.io$
+  # Next
+  - ^https://reposcope-next\.vercel\.app$
+  - ^https://reposcope-next-.+-pingcap\.vercel\.app$
+  - ^https://reposcope-next-ui\.vercel\.app$
+public_origins:
+  # External Users.
+  - ^https://github1s\.com$
+  - ^https://github\.com$

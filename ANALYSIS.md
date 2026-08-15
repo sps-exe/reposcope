@@ -240,12 +240,16 @@ consumed externally via the public API.
 
 ```bash
 pnpm install                 # needs Node >= 20.9, pnpm 10
-export DATABASE_URL="tidb://..."   # TiDB Serverless connection (required for queries)
-pnpm dev                    # web on http://localhost:3001
+pnpm dev                    # web on http://localhost:3001 — NO DATABASE_URL needed
 pnpm dev:docs               # docs on :3002
 pnpm --filter api-server dev   # public API on :3450
 pnpm --filter web check-types  # green (fixed from 221 errors — see §4.2)
 ```
+
+Without `DATABASE_URL` the app runs in **demo mode** (`executor/demo.ts`): the
+homepage hero/ticker, repo overview + stars history, Score, badges and pulse all
+serve synthetic/GitHub-public data, so a fresh clone renders the core product
+with zero backend. Set `DATABASE_URL` (TiDB Serverless) to switch to live data.
 
 ## 9. Transformation log
 

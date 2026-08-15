@@ -4,10 +4,17 @@ import { DateTime } from 'luxon';
 import { EndpointConfig } from '../config';
 import { getTiDBConnection } from '../connection';
 import { applyLegacyQueryParameters, BIG_NUMBER_TYPES, prepareQueryContext } from './utils';
+import { executeDemoQuery, isDemoMode } from './demo';
 
 const templateEngine = new Liquid();
 
 export default async function executeEndpoint (name: string, config: EndpointConfig, sqlTemplate: string, params: Record<string, any>, geo?: any, signal?: AbortSignal) {
+  // No DATABASE_URL? Serve synthetic demo data so the site works with zero
+  // backend (fresh clones, preview deploys, the public homepage).
+  if (isDemoMode()) {
+    return executeDemoQuery(name, config, params, geo);
+  }
+
   const queryParams = prepareQueryContext(config, params);
   const replacedSQL = applyLegacyQueryParameters(config, sqlTemplate, queryParams);
   const sql = await templateEngine.parseAndRender(replacedSQL, queryParams);

@@ -26,6 +26,10 @@
 
 ## What is Reposcope?
 
+**Live:** [reposcope-kohl.vercel.app](https://reposcope-kohl.vercel.app) —
+deployed continuously from `main` (the GitHub Actions badge above runs the
+typecheck + build gate).
+
 Reposcope is an analytics engine for the open source ecosystem. It ingests
 **10+ billion rows of GitHub event data** (GH Archive) into TiDB and turns them
 into live, queryable insight — measured in commits, stars, forks, and
@@ -114,10 +118,17 @@ by a thin endpoint module — adding a metric is usually a one-file change.
 
 ```bash
 pnpm install
-export DATABASE_URL="tidb://<your-tidb-serverless-connection-string>"
 pnpm dev                # web app → http://localhost:3001
-pnpm dev:docs           # docs & blog → http://localhost:3002
-pnpm --filter api-server dev   # public API → http://localhost:3450
+```
+
+**No database required.** Without a `DATABASE_URL`, Reposcope runs in **demo
+mode**: the homepage, repo pages, Reposcope Score, badges, and the live pulse
+feed all render with synthetic + GitHub-public data. Set a real TiDB cluster to
+switch to live analytics:
+
+```bash
+export DATABASE_URL="tidb://<your-tidb-serverless-connection-string>"
+pnpm dev
 ```
 
 ### Useful commands

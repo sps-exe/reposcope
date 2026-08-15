@@ -153,6 +153,43 @@ function demoRepoOverview(repoId: string): DemoRow[] {
   }];
 }
 
+export function demoTrendingRepos(): DemoRow[] {
+  return DEMO_REPOS.map(([owner, name], index) => {
+    const h = hashString(`${owner}/${name}`);
+    const stars = 20_000 + (h % 480_000);
+    return {
+      repo_id: 40_000_000 + index,
+      repo_name: `${owner}/${name}`,
+      language: ['TypeScript', 'Rust', 'Go', 'Python', 'JavaScript'][index % 5],
+      description: `${owner}'s ${name} — trending on Reposcope right now.`,
+      stars,
+      forks: Math.round(stars / 6),
+      pushes: 200 + ((h >> 5) % 900),
+      pull_requests: 100 + ((h >> 8) % 600),
+      contributor_logins: DEMO_ACTORS.slice(0, 5).join(','),
+      collection_names: index % 3 === 0 ? 'AI Agents' : index % 3 === 1 ? 'Web Frameworks' : null,
+      total_score: 60 + (h % 39),
+    };
+  });
+}
+
+function demoCollectionRanking(): DemoRow[] {
+  return DEMO_REPOS.map(([owner, name], index) => {
+    const h = hashString(`${owner}/${name}`);
+    return {
+      repo_id: 40_000_000 + index,
+      repo_name: `${owner}/${name}`,
+      current_period_growth: String(50 + (h % 900)),
+      past_period_growth: String(30 + (h % 700)),
+      growth_pop: String((h % 60) - 20),
+      rank_pop: String((h % 5) - 2),
+      total: String(10_000 + (h % 200_000)),
+      current_period_rank: index + 1,
+      past_period_rank: Math.max(1, index + (h % 3)),
+    };
+  });
+}
+
 function monthKey(monthsAgo: number): string {
   const now = new Date();
   const year = now.getFullYear();
@@ -213,14 +250,22 @@ export function executeDemoQuery(
     case 'analyze-stars-history':
       data = demoStarsHistory(queryParams.repoId ?? params.repoId);
       break;
+    case 'trending-repos':
+      data = demoTrendingRepos();
+      break;
+    case 'recent-hot-collections':
+      data = [];
+      break;
     case 'get-repo-collections':
+    case 'get-repo-by-id':
+    case 'get-user-by-login':
       data = [];
       break;
     default:
-      throw new Error(
-        `Demo mode has no synthetic data for query "${name}". ` +
-        'Set DATABASE_URL to a TiDB cluster to run live analytics queries.',
-      );
+      // Unknown query: return empty rows instead of throwing, so no page ever
+      // 500s in demo mode — charts just render empty until a DB is configured.
+      data = [];
+      break;
   }
 
   const end = DateTime.now();

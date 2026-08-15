@@ -7,12 +7,12 @@ export const FAQ_ITEMS: FAQItem[] = [
   {
     question: 'What is Reposcope?',
     answer:
-      'Reposcope is a free, open-source analytics platform that tracks over 10 billion GitHub events in real time. It provides deep insights into repositories, developers, and organizations — including stars, commits, pull requests, issues, and community health metrics. Powered by TiDB.',
+      'Reposcope is a free, open-source analytics platform for the open source world. It provides deep insights into repositories, developers, and organizations — including stars, commits, pull requests, issues, and community health metrics — computed live from GitHub.',
   },
   {
     question: 'How does Reposcope analyze repositories?',
     answer:
-      'Reposcope ingests public GitHub event data from GH Archive and stores it in TiDB, a distributed SQL database built to handle billions of rows. When you look up a repository, Reposcope queries this data in real time to generate a full analytics dashboard.',
+      'Reposcope reads live data from GitHub\'s public API — stars, forks, events, contributors — and computes a health score and analytics dashboard for any repository on the spot. No account or backend required.',
   },
   {
     question: 'Is Reposcope free to use?',
@@ -22,12 +22,12 @@ export const FAQ_ITEMS: FAQItem[] = [
   {
     question: 'What data does Reposcope use?',
     answer:
-      'Reposcope analyzes public GitHub event data archived by GH Archive, including stars, forks, issues, pull requests, commits, pushes, and comments — more than 10 billion events in total.',
+      'Reposcope pulls live public GitHub data — stars, forks, issues, pull requests, commits, pushes, and comments — straight from GitHub\'s API when you look something up.',
   },
   {
     question: 'How often is the data updated?',
     answer:
-      'Data is updated in near real-time, typically within a few seconds of the event occurring on GitHub.',
+      'Data is fetched live from GitHub\'s public API, so metrics are current as of the moment you load a page.',
   },
   {
     question: 'Can I analyze my own GitHub profile?',

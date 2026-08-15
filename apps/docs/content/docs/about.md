@@ -1,154 +1,72 @@
 ---
 sidebar_position: 1
 title: About Reposcope
-description: Reposcope is a powerful insight tool that can help you analyze any GitHub repository or developer. And you can get insights with the monthly and historical rankings as well.
+description: Reposcope is a live open source analytics platform. Score any GitHub repository, watch real-time activity, compare projects, and embed live badges — no account, no database, no setup.
 hide_title: true
 ---
 
 <h1 align="center"> About Reposcope 👁️</h1>
 
 <h3 align="center">
-  <b><a href="https://reposcope.io/explore">GitHub Data Explorer</a></b>
+  <b><a href="/analyze">Repository Analytics</a></b>
   •
-  <b><a href="https://reposcope.io/collections/open-source-database">Rankings</a></b>
+  <b><a href="/compare">Compare</a></b>
   •
-  <b><a href="https://reposcope.io/analyze/Ovilia">Developer Analytics</a></b>
+  <b><a href="/collections">Collections</a></b>
   •
-  <a href="https://reposcope.io/analyze/pingcap/tidb">Repository Analytics</a>
+  <b><a href="/trending">Trending</a></b>
   •
-  <a href="https://reposcope.io/collections/open-source-database">Collections</a>
+  <b><a href="/languages">Languages</a></b>
   •
-  <a href="/blog">Blogs</a>
+  <b><a href="/blog">Blog</a></b>
   •
-  <a href="https://twitter.com/Reposcope">Twitter</a>
+  <b><a href="https://github.com/sps-exe/reposcope">Source Code</a></b>
 </h3>
 
-Reposcope is a powerful tool that provides comprehensive, valuable, and trending insights into the open source world by analyzing 5+ billion rows of GitHub events data.
+Reposcope is a live, real-time analytics platform for the open source world. Point it at any GitHub repository, developer, or organization and it gives you a full picture of health, activity, and momentum — scored, compared, and embeddable in seconds.
 
-Reposcope's <a href="https://reposcope.io/explore">GitHub Data Explorer</a> provides a new way to explore GitHub data. Simply ask your question in natural language and GitHub Data Explorer will generate SQL, query the data, and present the results visually.
+## Reposcope Score
 
-Reposcope also provides in-depth analysis of individual GitHub repositories and developers, as well as the ability to compare two repositories using the same metrics.
+The signature Reposcope metric: a **0–100 health score** for any repository, computed live from GitHub's public API across five weighted dimensions:
 
-<div align="center">
-<iframe width="560" height="315" src="https://www.youtube.com/embed/6ofDBgXh4So?enablejsapi=1" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-</div>
+- **Popularity (30%)** — stars, forks, watchers
+- **Velocity (30%)** — recent commits, releases, activity
+- **Maintenance (20%)** — open-to-close issue and PR response times
+- **Community (10%)** — contributor diversity
+- **Longevity (10%)** — project age and history
 
-<br />
+Every repo page shows a live radial gauge with dimension breakdowns. No database, no account — just enter a repo and get a score.
 
-## Feature 1: GPT-Powered Data Exploration
+## Live Pulse
 
-GitHub Data Explorer provides a new way to discover trends and insights into 5+ billion rows of GitHub data.
-Simply ask your question in natural language and GitHub Data Explorer will generate SQL, query the data, and present the results visually. It's built with <a href ="https://tidbcloud.com/channel/?utm_source=reposcope&utm_medium=community&utm_campaign=chat2query_202301&utm_content=about">Chat2Query</a>, a GPT-powered SQL generator in TiDB Cloud. 
+The homepage streams **real GitHub events in real time** — pushes, stars, PRs, issues, merges — straight from GitHub's public events feed. Open Reposcope and watch the open source world move.
 
-Examples:
-- [Projects similar to @facebook/react](https://reposcope.io/explore?id=ba186a53-b2ab-4cad-a46f-e2c36566cacd)
-- [The most interesting Web3 projects](https://reposcope.io/explore?id=f829026d-491c-44e0-937a-287f97a3cba7)
-- [Where are @kubernetes/kubernetes contributors from?](https://reposcope.io/explore?id=754a681e-913f-4333-b55d-dbd8598bd84d)
-- [More popular questions](https://reposcope.io/explore/)
+## README Badges
 
-<div align="center">
-<iframe width="560" height="315" src="https://www.youtube.com/embed/rZZfgOJ-quI" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-</div>
+Embed live repo stats in any README with a single image URL — no account, no JavaScript, 6-hour CDN cache:
 
-<br />
+```md
+[![stars](https://reposcope.io/api/badge/facebook/react/stars)](https://reposcope.io/analyze/facebook/react)
+[![score](https://reposcope.io/api/badge/facebook/react/score)](https://reposcope.io/analyze/facebook/react)
+```
 
-## Feature 2: Technical Fields Analytics
+Metrics: `stars`, `forks`, `issues`, `contributors`, `language`, `license`, `score`.
 
-- **GitHub Collections Analytics**
+## Deep Analytics
 
-  Find insights about the monthly or historical rankings and trends in technical fields with curated repository lists.
+- **Repository Analytics** — stars, forks, issues, commits, pull requests, contributors, languages, and line-of-code changes over time, plus geographical and company distribution of stargazers and contributors.
+- **Developer Analytics** — contribution trends, work cadence, code reviews, issues, and time-distribution heatmaps for any GitHub user.
+- **Compare** — side-by-side analysis of any two repositories using the same metrics. Compare React and Vue, or CockroachDB and TiDB, with one URL.
+- **Collections** — 100+ curated lists ranking repos in technology domains (AI agents, databases, web frameworks, MCP servers, and more).
+- **Trending & Languages** — hottest repos by time period and language, plus language-level rankings.
 
-  <div align="center">
-    <img src="/img/screenshots/homepage-collection.png" alt="GitHub Collections Analytics" height="500" />
-  </div>
+## Public API
 
-  Examples：
+Reposcope ships a free, documented REST API plus an **MCP-compatible endpoint** for AI agents. List collections, fetch rankings, get repo analytics, search, and compare — all over simple GET requests. See the [API documentation](/docs/api) for details.
 
-  - [Collection: Web Framework](https://reposcope.io/collections/web-framework)
-  - [Collection: Artificial Intelligence](https://reposcope.io/collections/artificial-intelligence)
-  - [Collection: Web3](https://reposcope.io/collections/web3)
-  - [More](https://reposcope.io/collections/open-source-database) ...
+## How it's built
 
-  **Welcome to add collections**
-
-  👏 We welcome your contributions here! You can add a collection on our website by submitting PRs. Please create a `.yml` file under [the collections file path](https://github.com/reposcope/reposcope/tree/main/configs/collections).
-
-  [Here](https://github.com/reposcope/reposcope/blob/main/CONTRIBUTING.md#add-a-collection) is a file template that describes what you need to include. We look forward to your PRs！
-
-- **Deep Insight into some popular fields of technology**
-
-  Share with you many deep insights into some popular fields of technology, such as open source Databases, JavaScript Framework, Low-code Development Tools and so on.
-
-  Examples：
-
-  - [Deep Insight Into Open Source Databases](https://reposcope.io/blog/deep-insight-into-open-source-databases)
-  - [JavaScript Framework Repos Landscape 2021](https://reposcope.io/blog/deep-insight-into-js-framework-2021)
-  - [Web Framework Repos Landscape 2021](https://reposcope.io/blog/deep-insight-into-web-framework-2021)
-  - [More](https://reposcope.io/blog) ...
-
-  We’ll also share the SQL commands that generate all these analytical results above each chart, so you can use them on your own on TiDB Cloud following this [10-minute tutorial](https://reposcope.io/blog/try-it-yourself/).
-
-<br />
-
-## **Feature 3: Developer Analytics**
-
-Insights about **developer productivity**, **work cadence**, and **collaboration** from developers' contribution behavior.
-
-- Basic:
-  - Stars, behavior, most used languages，and contribution trends
-  - Code (commits, pull requests, pull request size and code line changes), code reviews, and issues
-- Advanced:
-  - Contribution time distribution for all kind of contribution activities
-  - Monthly stats about contribution activities in all public repositories
-
-<div align="center">
-    <img src="/img/screenshots/homepage-developer.png" alt="Developer Analytics" height="500" />
-</div>
-
-<br />
-
-## Feature 4: Repository Analytics
-
-Insights about the **code update frequency & degree of popularity** from repository’s status.
-
-* Basic:
-  * star, fork, issues, commits, pull requests, contributors, programming languages, lines of code modified
-  * Historical Trends of these metrics 
-  * Time Cost of issues, pull requests
-
-* Advanced:
-  * Geographical Distribution of stargazers, issue creators, pull requests creators
-  * Company Distribution of stargazers, issue creators, pull requests creators
-
-<div align="center">
-    <img src="/img/screenshots/homepage-repository.png" alt="Repository Analytics" height="500" />
-</div>
-
-Examples:
-* [React](https://reposcope.io/analyze/facebook/react)
-* [TiDB](https://reposcope.io/analyze/pingcap/tidb)
-* [web3.js](https://reposcope.io/analyze/web3/web3.js)
-* [Ant Design](https://reposcope.io/analyze/ant-design/ant-design)
-* [Chaos Mesh](https://reposcope.io/analyze/chaos-mesh/chaos-mesh)
-
-<br />
-
-## Feature 5: Compare Projects
-
-Compare two projects using the repo metrics mentioned in **Repository Analytics**.
-
-Examples:
-
-- [Compare Vue and React](https://reposcope.io/analyze/vuejs/vue?vs=facebook/react)
-- [Compare CockroachDB and TiDB](https://reposcope.io/analyze/pingcap/tidb?vs=cockroachdb/cockroach)
-- [Compare PyTorch and TensorFlow](https://reposcope.io/analyze/pytorch/pytorch?vs=tensorflow/tensorflow)
-
-<br />
-
-## Sponsors
-
-<div align="center">
-  <a href="https://www.pingcap.com/tidb-cloud-serverless/?utm_source=reposcope&utm_medium=referral">
-    <img src="/img/tidb-cloud-logo-o.png" alt="tidb cloud logo" height="20" />
-  </a>
-</div>
+- **Live data** — GitHub's public REST API, no backend or database required.
+- **Demo mode** — if the analytics database is unavailable, the site serves realistic synthetic data so it always runs. Point it at a real analytics store and live data takes over automatically.
+- **Stack** — Next.js, React, ECharts, TypeScript, and a pnpm monorepo.
+- **Open source** — Apache 2.0, on [GitHub](https://github.com/sps-exe/reposcope). Issues and PRs welcome.

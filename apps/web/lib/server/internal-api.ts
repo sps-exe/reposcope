@@ -15,6 +15,7 @@ import {
 } from '@/lib/collections';
 import { explainQuery, runQuery } from '@/lib/data-service/routes';
 import { executeOneRow, executeRows } from '@/lib/data-service/query';
+import { demoTrendingRepos, isDemoMode } from '@/lib/data-service/executor/demo';
 
 type RepoRecommendItem = {
   id: number;
@@ -158,7 +159,10 @@ export async function getRepoByName(owner: string, repo: string, signal?: AbortS
   );
 
   if (!row) {
-    return null;
+    // Demo mode (no DATABASE_URL): the local store is empty, so fetch the repo
+    // straight from GitHub's public API. This keeps every /analyze page working
+    // with zero backend; the DB path takes over when DATABASE_URL is set.
+    return fetchGitHubRepoDetail(owner, repo, signal);
   }
 
   return {
@@ -168,6 +172,53 @@ export async function getRepoByName(owner: string, repo: string, signal?: AbortS
       avatar_url: `https://avatars.githubusercontent.com/u/${row.owner_id}`,
     },
   };
+}
+
+/**
+ * Demo-mode repo lookup straight from GitHub's public API.
+ *
+ * Used when the analytics DB is unavailable (no DATABASE_URL) so that every
+ * /analyze/{owner}/{repo} page renders real repo metadata instead of 404ing.
+ */
+async function fetchGitHubRepoDetail(
+  owner: string,
+  repo: string,
+  signal?: AbortSignal,
+): Promise<RepoDetail | null> {
+  try {
+    const res = await fetch(`https://api.github.com/repos/${encodeURIComponent(owner)}/${encodeURIComponent(repo)}`, {
+      headers: {
+        Accept: 'application/vnd.github+json',
+        'X-GitHub-Api-Version': '2022-11-28',
+        'User-Agent': 'Reposcope/1.0 (+https://reposcope.io)',
+      },
+      signal,
+      next: { revalidate: 3600 },
+    });
+    if (!res.ok) {
+      return null;
+    }
+    const data = await res.json();
+    const ownerInfo = data.owner ?? {};
+    return {
+      id: data.id ?? 0,
+      full_name: data.full_name ?? `${owner}/${repo}`,
+      description: data.description ?? '',
+      language: data.language ?? '',
+      license: data.license?.spdx_id ?? '',
+      forks: data.forks_count ?? 0,
+      stars: data.stargazers_count ?? 0,
+      owner_login: ownerInfo.login ?? owner,
+      owner_id: ownerInfo.id ?? 0,
+      default_branch: data.default_branch ?? 'main',
+      owner: {
+        login: ownerInfo.login ?? owner,
+        avatar_url: ownerInfo.avatar_url ?? `https://github.com/${owner}.png`,
+      },
+    };
+  } catch {
+    return null;
+  }
 }
 
 export async function getUserById(id: number | string, signal?: AbortSignal) {
@@ -327,6 +378,19 @@ export async function searchUsers(keyword: string, kind: 'user' | 'org', signal?
 }
 
 export async function listCollections(signal?: AbortSignal) {
+  if (isDemoMode()) {
+    // Demo mode: no DB — serve a small set of on-brand collections so the
+    // Collections pages render instead of showing an empty grid.
+    return [
+      { id: 1, name: 'AI Agents', public: 1, past_month_visits: 98234 },
+      { id: 2, name: 'Web Frameworks', public: 1, past_month_visits: 85120 },
+      { id: 3, name: 'Programming Languages', public: 1, past_month_visits: 77345 },
+      { id: 4, name: 'Databases', public: 1, past_month_visits: 66110 },
+      { id: 5, name: 'DevOps', public: 1, past_month_visits: 58900 },
+      { id: 6, name: 'Rust Ecosystem', public: 1, past_month_visits: 51230 },
+    ];
+  }
+
   const { rows } = await executeRows(
     `
       SELECT
@@ -646,6 +710,21 @@ export async function getTrendingReposByLanguage(
   period: 'past_24_hours' | 'past_week' | 'past_month' = 'past_month',
   signal?: AbortSignal,
 ) {
+  if (isDemoMode()) {
+    const lang = language.toLowerCase();
+    return (demoTrendingRepos() as Array<Record<string, any>>)
+      .filter((repo) => !lang || lang === 'all' || String(repo.language).toLowerCase() === lang)
+      .map((repo) => ({
+        repo_id: repo.repo_id,
+        repo_name: repo.repo_name,
+        language: repo.language,
+        description: repo.description,
+        stars: repo.stars,
+        forks: repo.forks,
+        total_score: repo.total_score,
+      }));
+  }
+
   const { rows } = await executeRows(
     `
       WITH latest_snapshot AS (
@@ -702,6 +781,21 @@ export async function getTrendingRepos(
   period: Period = 'past_week',
   signal?: AbortSignal,
 ) {
+  if (isDemoMode()) {
+    const lang = language.toLowerCase();
+    return (demoTrendingRepos() as Array<Record<string, any>>)
+      .filter((repo) => lang === 'all' || String(repo.language).toLowerCase() === lang)
+      .map((repo) => ({
+        repo_id: repo.repo_id,
+        repo_name: repo.repo_name,
+        language: repo.language,
+        description: repo.description,
+        stars: repo.stars,
+        forks: repo.forks,
+        total_score: repo.total_score,
+      }));
+  }
+
   const { rows } = await executeRows(
     `
       WITH latest_snapshot AS (

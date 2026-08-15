@@ -16,26 +16,20 @@ export async function GET() {
 
   sections.push(`# Reposcope — Full Documentation
 
-> Reposcope is a free, open analytics platform that tracks over 10 billion GitHub events in real time, providing deep insights into repositories, developers, organizations, and open-source trends.
+> Reposcope is a free, open analytics platform that computes live insights into repositories, developers, organizations, and open-source trends straight from GitHub's public API.
 
-Source: GitHub Archive (gharchive.org), updated every hour.
-Powered by TiDB.
+Data source: GitHub's public REST API, fetched live on demand.
 
 ---
 
 ## Home (${SITE_URL}/)
 
 The homepage shows:
-- A real-time counter of total GitHub events analyzed (over 10 billion)
+- A live counter of GitHub events, updated in real time
+- A real-time pulse feed of public GitHub events (pushes, stars, PRs, issues)
 - Trending repositories ranked by stars, pull requests, or issues in configurable time windows
 - Hot collections (curated technology categories)
 - A search box to jump into any repository or developer analysis
-
----
-
-## Data Explorer (${SITE_URL}/explore/)
-
-A natural-language query interface for GitHub event data. Users type a question in plain English (e.g., "Which repos gained the most stars last month?") and Reposcope generates SQL, runs it against the full GitHub event dataset, and returns interactive visualizations. Powered by AI (Text-to-SQL).
 
 ---
 
@@ -155,10 +149,10 @@ See the full API reference at ${SITE_URL}/docs/api
 ## Frequently Asked Questions
 
 **Q: What data does Reposcope analyze?**
-A: Reposcope analyzes public GitHub event data archived by GH Archive (gharchive.org). This includes stars, forks, issues, pull requests, commits, comments, and more — over 10 billion events total.
+A: Reposcope reads live public GitHub data via GitHub's REST API — stars, forks, issues, pull requests, commits, comments, contributors, and more — when you look something up.
 
 **Q: How often is the data updated?**
-A: Data is updated in near real-time, typically within a few seconds of the event occurring on GitHub.
+A: Data is fetched live from GitHub's public API, so metrics are current as of the moment you load a page.
 
 **Q: Can I analyze any GitHub repository?**
 A: Yes. Enter any public GitHub repository name (e.g., \`facebook/react\`) in the search box and Reposcope will generate a full analytics dashboard.

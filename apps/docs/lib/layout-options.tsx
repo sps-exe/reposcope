@@ -48,4 +48,4 @@ export function getHomeNav() {
   };
 }
 
-export const githubUrl = 'https://github.com/reposcope/reposcope';
+export const githubUrl = 'https://github.com/sps-exe/reposcope';

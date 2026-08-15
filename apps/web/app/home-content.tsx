@@ -79,7 +79,7 @@ const languages = [
   'Common Lisp', 'Emacs Lisp', 'OCaml', 'MATLAB', 'Objective-C', 'Perl',
   'Fortran', 'Zig', 'Others',
 ];
-const OSSINSIGHT_REPO_QUERY_KEY = ['repo-meta', 'reposcope', 'reposcope'] as const;
+const REPOSCOPE_REPO_QUERY_KEY = ['repo-meta', 'reposcope', 'reposcope'] as const;
 const ONE_HOUR = 60 * 60 * 1000;
 
 function toSlug(name: string) {
@@ -834,10 +834,10 @@ function HeroSection() {
         <div className="flex-[3] flex flex-col justify-center items-end">
           <div className="w-full max-w-[800px] text-right">
           <p className="text-[#999] text-xl font-mono mb-3 tracking-wide">
-            SELECT <span className="text-white font-semibold">AI</span><span className="text-[#666]">_insights</span> FROM <span className="text-[#ccc] tabular-nums"><AnimatedTotal value={totalEvents} /></span> <span className="text-[#666]">GitHub events</span>
+            SELECT <span className="text-white font-semibold">insights</span> FROM <span className="text-[#ccc] tabular-nums"><AnimatedTotal value={totalEvents} /></span> <span className="text-[#666]">GitHub events</span>
           </p>
           <h1 className="text-5xl lg:text-[60px] font-bold leading-[1.15] mb-3 text-[#e3e3e3]">
-            Open Source <span className="text-white/30">(</span><span className="text-white font-extrabold">AI</span><span className="text-white/30">)</span> Software
+            Open Source
             <br />
             <span className="text-white">
               <svg className="inline-block align-middle mr-2 opacity-80" style={{ width: '0.85em', height: '0.85em' }} viewBox="0 0 24 24" fill="currentColor">
@@ -850,18 +850,8 @@ function HeroSection() {
           <p className="text-[13px] text-[#666] mt-3 leading-relaxed">
             Deep insight into developers and repos on GitHub
             <br />
-            <span className="text-[#888]">stars · pull requests · issues · commits · reviews</span>
+            <span className="text-[#888]">score · stars · pull requests · issues · commits</span>
           </p>
-          <div className="flex justify-end mt-5">
-            <a
-              href="https://www.pingcap.com/tidb-cloud/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="opacity-40 hover:opacity-70 transition-opacity"
-            >
-              <img src="/img/tidb-cloud-logo-o.png" alt="TiDB Cloud" width={107} height={20} style={{ height: 18 }} />
-            </a>
-          </div>
           </div>
         </div>
 
@@ -897,10 +887,10 @@ function HeroSection() {
           <LiveEventFeed />
           <div className="mt-4 text-[11px]">
             <Link
-              href="/blog/why-we-choose-tidb-to-support-reposcope"
+              href="/trending"
               className="text-[#555] hover:text-[#888] transition-colors"
             >
-              How do we create this real-time effect? →
+              See what&apos;s trending now →
             </Link>
           </div>
         </div>
@@ -1413,7 +1403,7 @@ function FAQSection() {
 
 function Footer() {
   const { data: repoData } = useQuery({
-    queryKey: OSSINSIGHT_REPO_QUERY_KEY,
+    queryKey: REPOSCOPE_REPO_QUERY_KEY,
     queryFn: () => fetchGitHubRepo('reposcope', 'reposcope'),
     staleTime: ONE_HOUR,
     gcTime: ONE_HOUR,
@@ -1473,7 +1463,7 @@ function Footer() {
           <div>
             <h4 className="font-bold mb-3">Sponsored By</h4>
             <ul className="space-y-2 text-gray-400">
-              <li><a href="https://www.pingcap.com/tidb-cloud/" target="_blank" rel="noopener noreferrer" className="hover:text-white">TiDB Cloud &#x2197;</a></li>
+              <li><a href="https://github.com/sps-exe/reposcope" target="_blank" rel="noopener noreferrer" className="hover:text-white">Source Code &#x2197;</a></li>
             </ul>
           </div>
           <div>

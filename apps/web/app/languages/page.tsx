@@ -95,7 +95,7 @@ export default function LanguagesPage() {
           </h1>
           <p className="mx-auto mt-4 max-w-2xl text-base text-[#7c7c7c]">
             Discover the most popular and fastest-growing open source projects, organized by programming language.
-            Rankings powered by real-time analysis of 10 billion+ GitHub events.
+            Rankings powered by live GitHub activity data.
           </p>
         </div>
 

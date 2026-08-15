@@ -1,5 +1,4 @@
 import type { SiteApp, SiteHeaderConfig } from './types';
-import ExploreIcon from './explore-icon';
 
 type EnvMap = Partial<Record<string, string | undefined>>;
 
@@ -47,10 +46,9 @@ export function createAppHeaderConfig(app: SiteApp, env: EnvMap = process.env): 
     },
     items: [
       {
-        label: 'Data Explorer',
-        href: getCrossAppHref(app, 'web', '/explore', env),
-        matchPrefixes: app === 'web' ? ['/explore'] : [],
-        icon: ExploreIcon as any,
+        label: 'Compare',
+        href: getCrossAppHref(app, 'web', '/compare', env),
+        matchPrefixes: app === 'web' ? ['/compare'] : [],
         forceReload: app !== 'web',
       },
       {
@@ -105,13 +103,13 @@ export function createAppHeaderConfig(app: SiteApp, env: EnvMap = process.env): 
             forceReload: app !== 'docs',
           },
           {
-            label: 'How is Reposcope built?',
-            href: getCrossAppHref(app, 'docs', '/blog/why-we-choose-tidb-to-support-reposcope', env),
-            forceReload: app !== 'docs',
+            label: 'Source Code',
+            href: 'https://github.com/sps-exe/reposcope',
+            newTab: true,
           },
           {
             label: 'Report an Issue',
-            href: 'https://github.com/reposcope/reposcope/issues',
+            href: 'https://github.com/sps-exe/reposcope/issues',
             newTab: true,
           },
         ],

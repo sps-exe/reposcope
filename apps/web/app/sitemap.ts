@@ -11,14 +11,13 @@ export const dynamic = 'force-dynamic';
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const entries: MetadataRoute.Sitemap = [];
 
-  // Static pages — canonical URLs without trailing slash for /explore and /collections
+  // Static pages — canonical URLs without trailing slash for /collections
   const staticPages: Array<{ path: string; priority: number; images?: string[] }> = [
     {
       path: '/',
       priority: 1.0,
       images: [`${SITE_URL}/seo-widgets-homepage.jpeg`],
     },
-    { path: '/explore', priority: 0.8 },
     { path: '/collections', priority: 0.8 },
     { path: '/trending', priority: 0.8 },
     { path: '/trending/ai', priority: 0.9 },

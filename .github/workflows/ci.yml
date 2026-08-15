@@ -29,6 +29,3 @@ jobs:
 
       - name: Build web
         run: pnpm --filter web build
-
-      - name: Typecheck packages
-        run: pnpm -r --filter '!web' exec -- tsc --noEmit

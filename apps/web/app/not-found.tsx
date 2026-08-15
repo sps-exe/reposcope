@@ -37,10 +37,10 @@ export default function NotFound() {
           ← Back to Home
         </Link>
         <Link
-          href="/explore"
+          href="/analyze/facebook/react"
           className="inline-flex items-center justify-center rounded-lg border border-white/20 text-white font-medium px-6 py-3 hover:bg-white/5 transition-colors"
         >
-          🔍 Search Data Explorer
+          🔍 Try Repo Analytics
         </Link>
         <Link
           href="/trending"
@@ -61,8 +61,8 @@ export default function NotFound() {
           Trending
         </Link>
         <span className="mx-2">·</span>
-        <Link href="/explore" className="text-white/70 hover:text-white transition-colors underline">
-          Data Explorer
+        <Link href="/compare" className="text-white/70 hover:text-white transition-colors underline">
+          Compare
         </Link>
       </div>
 

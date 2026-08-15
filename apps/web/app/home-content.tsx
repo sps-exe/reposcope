@@ -1456,12 +1456,12 @@ function Footer() {
             <ul className="space-y-2 text-gray-400">
               <li><Link href="/collections" className="hover:text-white">Collections</Link></li>
               <li><a href="/blog" className="hover:text-white">Blog</a></li>
-              <li><a href="/docs" className="hover:text-white">Workshop</a></li>
+              <li><a href="/docs/about" className="hover:text-white">About</a></li>
               <li><a href="/docs/api" className="hover:text-white">API</a></li>
             </ul>
           </div>
           <div>
-            <h4 className="font-bold mb-3">Sponsored By</h4>
+            <h4 className="font-bold mb-3">Project</h4>
             <ul className="space-y-2 text-gray-400">
               <li><a href="https://github.com/sps-exe/reposcope" target="_blank" rel="noopener noreferrer" className="hover:text-white">Source Code &#x2197;</a></li>
             </ul>
@@ -1481,7 +1481,7 @@ function Footer() {
             <ul className="space-y-2 text-gray-400">
               <li><a href="https://twitter.com/Reposcope" target="_blank" rel="noopener noreferrer" className="hover:text-white">Twitter &#x2197;</a></li>
               <li><a href="mailto:hello@reposcope.io" className="hover:text-white">Email &#x2197;</a></li>
-              <li><a href="https://github.com/reposcope/reposcope" target="_blank" rel="noopener noreferrer" className="hover:text-white">GitHub &#x2197;</a></li>
+              <li><a href="https://github.com/sps-exe/reposcope" target="_blank" rel="noopener noreferrer" className="hover:text-white">GitHub &#x2197;</a></li>
             </ul>
           </div>
         </div>

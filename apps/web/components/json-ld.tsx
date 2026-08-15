@@ -17,12 +17,12 @@ export function WebSiteJsonLd() {
         '@type': 'WebSite',
         name: 'Reposcope',
         url: SITE_URL,
-        description: 'Reposcope analyzes billions of GitHub events and provides insights for open source software.',
+        description: 'Reposcope analyzes live GitHub data and provides insights for open source software.',
         keywords: [
           'open source analytics',
           'GitHub insights',
           'GitHub trending repositories',
-          'AI agent frameworks',
+          'repository score',
           'open source intelligence',
           'repository analytics',
           'developer analytics',
@@ -34,7 +34,7 @@ export function WebSiteJsonLd() {
         },
         potentialAction: {
           '@type': 'SearchAction',
-          target: `${SITE_URL}/explore/?q={search_term_string}`,
+          target: `${SITE_URL}/?q={search_term_string}`,
           'query-input': 'required name=search_term_string',
         },
       }}
@@ -93,20 +93,15 @@ export function OrganizationJsonLd() {
         name: 'Reposcope',
         url: SITE_URL,
         logo: `${SITE_URL}/logo.svg`,
-        description: 'Reposcope analyzes billions of GitHub events and provides insights for open source software, AI agent ecosystems, and trending repositories.',
+        description: 'Reposcope computes live GitHub analytics and health scores for open source software and trending repositories.',
         keywords: [
           'open source',
           'GitHub analytics',
-          'AI agent ecosystem',
+          'repository score',
           'open source intelligence',
         ],
-        parentOrganization: {
-          '@type': 'Organization',
-          name: 'Reposcope',
-          url: 'https://reposcope.io',
-        },
         sameAs: [
-          'https://github.com/reposcope/reposcope',
+          'https://github.com/sps-exe/reposcope',
           'https://twitter.com/Reposcope',
         ],
       }}
@@ -214,7 +209,7 @@ export function SiteNavigationJsonLd() {
   const SITE_URL_LOCAL = process.env.SITE_URL || 'https://reposcope.io';
   const navItems = [
     { name: 'Home', url: `${SITE_URL_LOCAL}/` },
-    { name: 'Data Explorer', url: `${SITE_URL_LOCAL}/explore` },
+    { name: 'Compare', url: `${SITE_URL_LOCAL}/compare` },
     { name: 'Collections', url: `${SITE_URL_LOCAL}/collections` },
     { name: 'Trending', url: `${SITE_URL_LOCAL}/trending` },
     { name: 'Languages', url: `${SITE_URL_LOCAL}/languages` },
@@ -303,7 +298,7 @@ export function SiteApplicationJsonLd() {
         operatingSystem: 'Web',
         url: SITE_URL,
         description:
-          'Reposcope analyzes billions of GitHub events and provides real-time insights for open source software repositories, developers, and organizations.',
+          'Reposcope computes live GitHub analytics and health scores for open source software repositories, developers, and organizations.',
         offers: {
           '@type': 'Offer',
           price: '0',
@@ -311,8 +306,8 @@ export function SiteApplicationJsonLd() {
         },
         author: {
           '@type': 'Organization',
-          name: 'PingCAP',
-          url: 'https://pingcap.com',
+          name: 'Reposcope',
+          url: SITE_URL,
         },
         screenshot: `${SITE_URL}/seo-widgets-homepage.jpeg`,
       }}
@@ -329,20 +324,16 @@ export function WebPageJsonLd() {
         name: 'Reposcope — Open Source Software Insight',
         url: SITE_URL,
         description:
-          'Real-time analytics for 10B+ GitHub events. Discover trending repositories, analyze open source projects, and explore the AI agent ecosystem with data-driven insights.',
+          'Live GitHub analytics and health scores. Discover trending repositories, analyze open source projects, and compare them side by side with data-driven insights.',
         keywords: [
           'open source analytics',
           'GitHub insights',
-          'AI agent frameworks',
+          'repository score',
           'trending repositories',
           'GitHub star history',
           'open source intelligence',
           'repository comparison',
           'developer analytics',
-          'AI coding tools',
-          'MCP servers',
-          'LLM frameworks',
-          'open source AI projects',
         ],
         isPartOf: {
           '@type': 'WebSite',
@@ -375,8 +366,8 @@ export function WebPageJsonLd() {
         },
         provider: {
           '@type': 'Organization',
-          name: 'PingCAP',
-          url: 'https://pingcap.com',
+          name: 'Reposcope',
+          url: SITE_URL,
         },
       }}
     />
@@ -406,11 +397,6 @@ export function DatasetJsonLd({
           '@type': 'Organization',
           name: 'Reposcope',
           url: SITE_URL,
-          parentOrganization: {
-            '@type': 'Organization',
-            name: 'PingCAP',
-            url: 'https://pingcap.com',
-          },
         },
         license: 'https://creativecommons.org/licenses/by/4.0/',
         isAccessibleForFree: true,

@@ -290,11 +290,48 @@ function eventVerb(event: GHEvent) {
 }
 
 function LiveEventFeed() {
-  const { data, reload } = useRemoteData<GHEvent>('events-increment-list', {});
-  const allEvents = data?.data ?? EMPTY_EVENTS;
+  const { data, error, reload } = useRemoteData<GHEvent>('events-increment-list', {});
+  const [fallbackEvents, setFallbackEvents] = useState<GHEvent[]>([]);
+  const dbEvents = data?.data ?? EMPTY_EVENTS;
+  // The analytics DB may be unavailable (fresh clone, no TiDB, API down).
+  // Fall back to GitHub's public events API so the feed stays alive.
+  const allEvents = dbEvents.length > 0 ? dbEvents : fallbackEvents;
   const [visibleEvents, setVisibleEvents] = useState<(GHEvent & { _key: string })[]>([]);
   const indexRef = useRef(0);
   const pausedRef = useRef(false);
+
+  useEffect(() => {
+    if (dbEvents.length > 0 || fallbackEvents.length > 0) return;
+    let cancelled = false;
+    const delay = error ? 0 : 2500;
+    const timer = setTimeout(() => {
+      void fetch('/api/pulse')
+        .then((res) => (res.ok ? res.json() : null))
+        .then((json: { data?: GHEvent[] } | null) => {
+          if (cancelled || !json?.data?.length) return;
+          setFallbackEvents(json.data);
+        })
+        .catch(() => { /* keep the feed silent rather than crash the page */ });
+    }, delay);
+    return () => {
+      cancelled = true;
+      clearTimeout(timer);
+    };
+  }, [dbEvents.length, fallbackEvents.length, error]);
+
+  // When running on the pulse fallback, refresh it periodically.
+  useEffect(() => {
+    if (fallbackEvents.length === 0) return;
+    const interval = setInterval(() => {
+      void fetch('/api/pulse')
+        .then((res) => (res.ok ? res.json() : null))
+        .then((json: { data?: GHEvent[] } | null) => {
+          if (json?.data?.length) setFallbackEvents(json.data);
+        })
+        .catch(() => { /* keep the previous feed */ });
+    }, 60_000);
+    return () => clearInterval(interval);
+  }, [fallbackEvents.length]);
 
   useEffect(() => {
     if (allEvents.length === 0) {

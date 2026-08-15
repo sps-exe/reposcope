@@ -24,6 +24,7 @@ import ShareButtons from '@/components/ShareButtons';
 import { useAnalyzeChartContext, useAnalyzeContext } from '@/components/Analyze/context';
 import MetricTable from '@/components/ui/MetricTable';
 import type { MetricItem } from '@/components/ui/MetricTable';
+import ReposcopeScoreCard from '@/components/ReposcopeScoreCard';
 import { queryAPI } from '@/utils/api';
 import { useDebouncedValue } from '@/utils/useDebouncedValue';
 import {
@@ -186,6 +187,7 @@ function MonthlySummaryCard() {
 
 export function OverviewSection() {
   const { repoName, repoInfo, repoId, comparingRepoId: vs, comparingRepoName, comparingRepoId } = useAnalyzeContext();
+  const [owner, repo] = repoName.split('/');
 
   const collectionsQuery = useQuery({
     queryKey: ['analyze', 'repo-collections', repoId],
@@ -273,6 +275,10 @@ export function OverviewSection() {
         ) : null}
 
         <SectionHeading>Overview</SectionHeading>
+
+        <div className="mt-6">
+          <ReposcopeScoreCard owner={owner} repo={repo} />
+        </div>
 
         <div className="mt-6 grid grid-cols-1 items-start gap-6 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)]">
           <div>

@@ -47,6 +47,13 @@ contributors, not hype.
 
 ### For researchers & analysts
 
+- **Reposcope Score** — a proprietary 0–100 health & activity score for any
+  repository (popularity, velocity, maintenance, community, longevity), computed
+  live from GitHub with no database required. Shown on every repo page and
+  available via `GET /api/score/:owner/:repo`.
+- **Live Pulse feed** — the homepage ticker streams real GitHub-wide activity;
+  it falls back to GitHub's public events API when the analytics DB is
+  unavailable, so the site never goes quiet.
 - **Public API** — a rate-limited, documented REST API
   (`api.reposcope.io`) with OpenAPI spec
 - **Live README Badges** — embed live repo stats in any README with a single
@@ -58,6 +65,10 @@ contributors, not hype.
   [![issues](https://reposcope.io/api/badge/facebook/react/issues)](https://reposcope.io/analyze/facebook/react)
   [![contributors](https://reposcope.io/api/badge/facebook/react/contributors)](https://reposcope.io/analyze/facebook/react)
   [![language](https://reposcope.io/api/badge/facebook/react/language)](https://reposcope.io/analyze/facebook/react)
+  [![score](https://reposcope.io/api/badge/facebook/react/score)](https://reposcope.io/analyze/facebook/react)
+
+  Metrics: `stars`, `forks`, `issues`, `contributors`, `language`, `license`,
+  and `score` (the Reposcope Score).
   ```
 
   Supported metrics: `stars`, `forks`, `issues`, `contributors`, `language`, `license`.

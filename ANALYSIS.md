@@ -244,5 +244,18 @@ export DATABASE_URL="tidb://..."   # TiDB Serverless connection (required for qu
 pnpm dev                    # web on http://localhost:3001
 pnpm dev:docs               # docs on :3002
 pnpm --filter api-server dev   # public API on :3450
-pnpm --filter web check-types  # NOTE: red at baseline (see §4.2)
+pnpm --filter web check-types  # green (fixed from 221 errors — see §4.2)
 ```
+
+## 9. Transformation log
+
+- **Reposcope Score** (`lib/reposcope-score.ts`, `app/api/score/[owner]/[repo]`):
+  proprietary 0–100 health/activity metric computed live from GitHub's public
+  API (no DB). Weights: popularity 30%, velocity 30%, maintenance 20%, community
+  10%, longevity 10%. Shown as a gauge card on every repo page.
+- **Pulse API** (`app/api/pulse`): proxies GitHub's public events API (cached
+  45s, normalized to the homepage ticker's event shape). The homepage ticker
+  falls back to it when the analytics DB is unavailable — the site stays alive
+  with zero backend.
+- **Badge API** (`app/api/badge/[...path]`): added the `score` metric
+  (grade-colored), alongside stars/forks/issues/contributors/language/license.

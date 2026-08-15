@@ -1,4 +1,5 @@
 import { NextRequest } from 'next/server';
+import { computeReposcopeScore, type ScoreInput } from '@/lib/reposcope-score';
 
 /**
  * Reposcope badge API.
@@ -11,6 +12,7 @@ import { NextRequest } from 'next/server';
  *   https://reposcope.io/api/badge/facebook/react/language
  *   https://reposcope.io/api/badge/facebook/react/license
  *   https://reposcope.io/api/badge/facebook/react/contributors
+ *   https://reposcope.io/api/badge/facebook/react/score
  *
  * Data comes from GitHub's public API (no auth, no DB needed) and is cached
  * for six hours at the CDN — badges are meant to be embedded in READMEs.
@@ -18,7 +20,7 @@ import { NextRequest } from 'next/server';
 
 export const runtime = 'edge';
 
-const METRICS = ['stars', 'forks', 'issues', 'contributors', 'language', 'license'] as const;
+const METRICS = ['stars', 'forks', 'issues', 'contributors', 'language', 'license', 'score'] as const;
 type Metric = (typeof METRICS)[number];
 
 const SIX_HOURS = 60 * 60 * 6;
@@ -39,10 +41,15 @@ interface GitHubRepo {
   full_name?: string;
   stargazers_count?: number;
   forks_count?: number;
+  watchers_count?: number;
   open_issues_count?: number;
+  created_at?: string;
+  pushed_at?: string;
   language?: string | null;
   license?: { spdx_id?: string | null } | null;
 }
+
+type WeeklyActivity = { total?: number }[];
 
 type BadgeSpec = { label: string; value: string; color?: string };
 
@@ -63,10 +70,15 @@ export async function GET(req: NextRequest, ctx: { params: Promise<{ path: strin
 
   const metric = rawMetric as Metric;
 
-  const [repoResult, contributorsResult] = await Promise.all([
+  const needsCommunity = metric === 'contributors' || metric === 'score';
+
+  const [repoResult, contributorsResult, activityResult] = await Promise.all([
     fetchGitHub<GitHubRepo>(`repos/${owner}/${repo}`),
-    metric === 'contributors'
+    needsCommunity
       ? fetchGitHub<GitHubRepo[]>(`repos/${owner}/${repo}/contributors?per_page=1&anon=true`)
+      : Promise.resolve(undefined),
+    metric === 'score'
+      ? fetchGitHub<WeeklyActivity>(`repos/${owner}/${repo}/stats/commit_activity`)
       : Promise.resolve(undefined),
   ]);
 
@@ -97,6 +109,31 @@ export async function GET(req: NextRequest, ctx: { params: Promise<{ path: strin
     case 'contributors': {
       const total = parseContributorsTotal(contributorsResult?.headers);
       badge = numberBadge('contributors', total);
+      break;
+    }
+    case 'score': {
+      const activity = Array.isArray(activityResult?.data)
+        ? (activityResult.data as WeeklyActivity).map((week) => week?.total ?? 0)
+        : [];
+      const hasActivity =
+        Boolean(activityResult?.ok) && activityResult?.status === 200 && activity.length > 0;
+      const input: ScoreInput = {
+        stars: data.stargazers_count ?? 0,
+        forks: data.forks_count ?? 0,
+        watchers: data.watchers_count ?? 0,
+        openIssues: data.open_issues_count ?? 0,
+        contributors: parseContributorsTotal(contributorsResult?.headers) ?? 0,
+        createdAt: data.created_at ?? new Date().toISOString(),
+        pushedAt: data.pushed_at ?? new Date().toISOString(),
+        weeklyCommits: activity,
+        hasCommitActivity: hasActivity,
+      };
+      const score = computeReposcopeScore(input);
+      badge = {
+        label: 'reposcope score',
+        value: `${score.score} ${score.grade}`,
+        color: scoreColor(score.score),
+      };
       break;
     }
   }
@@ -144,6 +181,14 @@ function textBadge(label: string, value: string): BadgeSpec {
 
 function errorBadge(label: string, value: string): BadgeSpec {
   return { label, value, color: '#7d8496' };
+}
+
+function scoreColor(score: number): string {
+  if (score >= 85) return '#22d3ee';
+  if (score >= 70) return '#a78bfa';
+  if (score >= 55) return '#34d399';
+  if (score >= 40) return '#fbbf24';
+  return '#7d8496';
 }
 
 function formatCompact(n: number): string {
